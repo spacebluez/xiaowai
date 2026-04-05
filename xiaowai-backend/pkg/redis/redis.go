@@ -3,9 +3,9 @@ package redis
 import (
 	"context"
 	"fmt"
-	"spaceblue/config"
 	"sync"
 	"time"
+	"xiaowai-backend/config"
 
 	"github.com/redis/go-redis/v9"
 )

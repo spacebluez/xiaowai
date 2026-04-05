@@ -3,12 +3,12 @@ package controller
 import (
 	"io"
 	"net/http"
-	"spaceblue/Internal/dto"
-	"spaceblue/Internal/model"
-	"spaceblue/Internal/service"
-	"spaceblue/pkg/jwt"
-	"spaceblue/pkg/logger"
 	"strconv"
+	"xiaowai-backend/Internal/dto"
+	"xiaowai-backend/Internal/model"
+	"xiaowai-backend/Internal/service"
+	"xiaowai-backend/pkg/jwt"
+	"xiaowai-backend/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

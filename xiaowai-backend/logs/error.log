@@ -1,0 +1,1 @@
+{"level":"ERROR","ts":"2026-04-05T23:56:18.428+0800","caller":"middleware/logger.go:65","msg":"程序发生 panic","method":"POST","path":"/api/v1/user/agent/chat","ip":"218.77.77.201","error":"runtime error: invalid memory address or nil pointer dereference","trace_id":"2d8b761a-02ef-43c1-8a5a-7442784253c2"}

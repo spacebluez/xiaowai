@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"fmt"
-	"spaceblue/config"
-	"spaceblue/pkg/jwt"
+	"xiaowai-backend/config"
+	"xiaowai-backend/pkg/jwt"
 
 	"github.com/gin-gonic/gin"
 	jwtv5 "github.com/golang-jwt/jwt/v5"

@@ -54,6 +54,10 @@ type Config struct {
 	} `mapstructure:"jwt"`
 	Log struct {
 		Default Logger `mapstructure:"default"`
+		Info    Logger `mapstructure:"info"`
+		Error   Logger `mapstructure:"error"`
+		Debug   Logger `mapstructure:"debug"`
+		Warn    Logger `mapstructure:"warn"`
 	} `mapstructure:"logger"`
 }
 

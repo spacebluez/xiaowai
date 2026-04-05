@@ -2,9 +2,9 @@ package store
 
 import (
 	"fmt"
-	"spaceblue/Internal/model"
-	"spaceblue/config"
 	"sync"
+	"xiaowai-backend/Internal/model"
+	"xiaowai-backend/config"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

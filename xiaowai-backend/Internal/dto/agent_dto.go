@@ -7,3 +7,9 @@ type ChatAgentRequest struct {
 type ChatAgentData struct {
 	Output string `json:"output"`
 }
+
+type CreateAgentRequest struct {
+	Name      string `json:"name" binding:"required"`
+	ModelName string `json:"model_name" binding:"required"`
+	Persona   string `json:"persona" binding:"required"`
+}

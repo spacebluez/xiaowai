@@ -3,7 +3,7 @@ package logger
 import (
 	"context"
 	"os"
-	"spaceblue/config"
+	"xiaowai-backend/config"
 
 	"github.com/google/uuid"
 	"github.com/natefinch/lumberjack"
@@ -11,27 +11,81 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+// levelEnabler 是一个自定义的 LevelEnabler，只允许特定级别的日志通过
+type levelEnabler struct {
+	level zapcore.Level
+}
+
+// Enabled 实现 zapcore.LevelEnabler 接口
+func (l levelEnabler) Enabled(level zapcore.Level) bool {
+	return level == l.level
+}
+
 type TraceIDKey struct{}
 
 var Log *zap.Logger
 
 func InitLogger() {
-	lumberjackLogger := &lumberjack.Logger{
-		Filename:   config.Get().Log.Default.FileName,
-		MaxSize:    config.Get().Log.Default.MaxSize,
-		MaxBackups: config.Get().Log.Default.MaxBackups,
-		MaxAge:     config.Get().Log.Default.MaxAge,
-		Compress:   config.Get().Log.Default.ComPress,
-	}
-
 	encoderCofig := zap.NewProductionEncoderConfig()
 	encoderCofig.EncodeTime = zapcore.ISO8601TimeEncoder
 	encoderCofig.EncodeLevel = zapcore.CapitalLevelEncoder
 
-	core := zapcore.NewCore(
+	// 配置不同级别的日志文件
+	infoLogger := &lumberjack.Logger{
+		Filename:   config.Get().Log.Info.FileName,
+		MaxSize:    config.Get().Log.Info.MaxSize,
+		MaxBackups: config.Get().Log.Info.MaxBackups,
+		MaxAge:     config.Get().Log.Info.MaxAge,
+		Compress:   config.Get().Log.Info.ComPress,
+	}
+
+	errorLogger := &lumberjack.Logger{
+		Filename:   config.Get().Log.Error.FileName,
+		MaxSize:    config.Get().Log.Error.MaxSize,
+		MaxBackups: config.Get().Log.Error.MaxBackups,
+		MaxAge:     config.Get().Log.Error.MaxAge,
+		Compress:   config.Get().Log.Error.ComPress,
+	}
+
+	debugLogger := &lumberjack.Logger{
+		Filename:   config.Get().Log.Debug.FileName,
+		MaxSize:    config.Get().Log.Debug.MaxSize,
+		MaxBackups: config.Get().Log.Debug.MaxBackups,
+		MaxAge:     config.Get().Log.Debug.MaxAge,
+		Compress:   config.Get().Log.Debug.ComPress,
+	}
+
+	warnLogger := &lumberjack.Logger{
+		Filename:   config.Get().Log.Warn.FileName,
+		MaxSize:    config.Get().Log.Warn.MaxSize,
+		MaxBackups: config.Get().Log.Warn.MaxBackups,
+		MaxAge:     config.Get().Log.Warn.MaxAge,
+		Compress:   config.Get().Log.Warn.ComPress,
+	}
+
+	// 创建不同级别的日志核心，使用自定义的 levelEnabler 确保每个文件只包含指定级别的日志
+	infoCore := zapcore.NewCore(
 		zapcore.NewJSONEncoder(encoderCofig),
-		zapcore.AddSync(lumberjackLogger),
-		zapcore.InfoLevel,
+		zapcore.AddSync(infoLogger),
+		levelEnabler{level: zapcore.InfoLevel},
+	)
+
+	errorCore := zapcore.NewCore(
+		zapcore.NewJSONEncoder(encoderCofig),
+		zapcore.AddSync(errorLogger),
+		levelEnabler{level: zapcore.ErrorLevel},
+	)
+
+	debugCore := zapcore.NewCore(
+		zapcore.NewJSONEncoder(encoderCofig),
+		zapcore.AddSync(debugLogger),
+		levelEnabler{level: zapcore.DebugLevel},
+	)
+
+	warnCore := zapcore.NewCore(
+		zapcore.NewJSONEncoder(encoderCofig),
+		zapcore.AddSync(warnLogger),
+		levelEnabler{level: zapcore.WarnLevel},
 	)
 
 	consoleCore := zapcore.NewCore(
@@ -40,7 +94,8 @@ func InitLogger() {
 		zapcore.InfoLevel,
 	)
 
-	Log = zap.New(zapcore.NewTee(core, consoleCore), zap.AddCaller(), zap.AddCallerSkip(1))
+	// 合并所有核心
+	Log = zap.New(zapcore.NewTee(infoCore, errorCore, debugCore, warnCore, consoleCore), zap.AddCaller(), zap.AddCallerSkip(1))
 	Log.Info("Logger initialized")
 }
 

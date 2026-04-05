@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"spaceblue/pkg/logger"
 	"time"
+	"xiaowai-backend/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

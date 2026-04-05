@@ -2,20 +2,45 @@ package service
 
 import (
 	"context"
-	"spaceblue/pkg/llm/qianwen"
-	"spaceblue/pkg/logger"
+	"xiaowai-backend/Internal/dto"
+	"xiaowai-backend/Internal/model"
+	"xiaowai-backend/Internal/repository"
+	"xiaowai-backend/pkg/llm/qianwen"
+	"xiaowai-backend/pkg/logger"
 
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 type AgentService struct {
-	agent *qianwen.QianWenClient
+	agent     *qianwen.QianWenClient
+	agentRepo *repository.AgentRepository
+	db        *gorm.DB
 }
 
-func NewAgentService(agent *qianwen.QianWenClient) *AgentService {
+func NewAgentService(agent *qianwen.QianWenClient, db *gorm.DB, agentRepo *repository.AgentRepository) *AgentService {
 	return &AgentService{
-		agent: agent,
+		agent:     agent,
+		agentRepo: agentRepo,
+		db:        db,
 	}
+}
+
+func (s *AgentService) CreateAgent(ctx context.Context, id uint, req *dto.CreateAgentRequest) error {
+	logger.InfoWithTrace(ctx, "创建智能体配置", zap.Uint("id", id), zap.Any("req", req))
+
+	agent := &model.Agent{
+		UserID:    id,
+		Name:      req.Name,
+		ModelName: req.ModelName,
+		Persona:   req.Persona,
+	}
+	if err := s.agentRepo.CreateAgent(ctx, s.db, agent); err != nil {
+		logger.ErrorWithTrace(ctx, "创建智能体配置失败", zap.Error(err))
+		return err
+	}
+	logger.InfoWithTrace(ctx, "智能体配置创建成功", zap.Uint("id", agent.ID))
+	return nil
 }
 
 func (s *AgentService) ChatAgent(ctx context.Context, id uint, input string) (output string, err error) {

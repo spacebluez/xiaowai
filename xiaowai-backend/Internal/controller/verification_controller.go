@@ -2,8 +2,8 @@ package controller
 
 import (
 	"net/http"
-	"spaceblue/Internal/dto"
-	"spaceblue/Internal/service"
+	"xiaowai-backend/Internal/dto"
+	"xiaowai-backend/Internal/service"
 
 	"github.com/gin-gonic/gin"
 )

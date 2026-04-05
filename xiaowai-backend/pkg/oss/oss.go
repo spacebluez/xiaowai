@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"spaceblue/config"
 	"strings"
 	"sync"
 	"time"
+	"xiaowai-backend/config"
 
 	"github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss"
 	"github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss/credentials"

@@ -3,13 +3,14 @@ package main
 import (
 	"os"
 	"path/filepath"
-	"spaceblue/Internal/store"
-	"spaceblue/config"
-	"spaceblue/pkg/email"
-	"spaceblue/pkg/logger"
-	"spaceblue/pkg/oss"
-	"spaceblue/pkg/redis"
-	"spaceblue/router"
+	"xiaowai-backend/Internal/store"
+	"xiaowai-backend/config"
+	"xiaowai-backend/pkg/email"
+	"xiaowai-backend/pkg/llm/qianwen"
+	"xiaowai-backend/pkg/logger"
+	"xiaowai-backend/pkg/oss"
+	"xiaowai-backend/pkg/redis"
+	"xiaowai-backend/router"
 
 	"go.uber.org/zap"
 )
@@ -35,6 +36,7 @@ func main() {
 	redis.Init()
 	email.Init()
 	oss.Init()
+	qianwen.Init()
 
 	r := router.InitRouter()
 	if err := r.Run(":8080"); err != nil {

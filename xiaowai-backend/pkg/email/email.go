@@ -4,8 +4,8 @@ import (
 	"crypto/tls"
 	"fmt"
 	"net/smtp"
-	"spaceblue/config"
 	"sync"
+	"xiaowai-backend/config"
 
 	"github.com/jordan-wright/email"
 )

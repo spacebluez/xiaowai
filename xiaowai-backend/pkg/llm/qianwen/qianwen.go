@@ -2,9 +2,9 @@ package qianwen
 
 import (
 	"net/http"
-	"spaceblue/config"
 	"sync"
 	"time"
+	"xiaowai-backend/config"
 )
 
 var once sync.Once

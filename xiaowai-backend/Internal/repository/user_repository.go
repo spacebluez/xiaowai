@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 	"errors"
-	"spaceblue/Internal/model"
-	"spaceblue/pkg/logger"
+	"xiaowai-backend/Internal/model"
+	"xiaowai-backend/pkg/logger"
 
 	"go.uber.org/zap"
 	"gorm.io/gorm"

@@ -1,13 +1,13 @@
 package router
 
 import (
-	"spaceblue/Internal/controller"
-	"spaceblue/Internal/middleware"
-	"spaceblue/Internal/repository"
-	"spaceblue/Internal/service"
-	"spaceblue/Internal/store"
-	"spaceblue/pkg/llm/qianwen"
-	"spaceblue/pkg/redis"
+	"xiaowai-backend/Internal/controller"
+	"xiaowai-backend/Internal/middleware"
+	"xiaowai-backend/Internal/repository"
+	"xiaowai-backend/Internal/service"
+	"xiaowai-backend/Internal/store"
+	"xiaowai-backend/pkg/llm/qianwen"
+	"xiaowai-backend/pkg/redis"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,7 +26,8 @@ func InitRouter() *gin.Engine {
 	userCtrl := controller.NewUserController(userService)
 	verifyCtrl := controller.NewVerificationController(verificationService)
 
-	agentService := service.NewAgentService(qianwen.GetClient())
+	agentRepo := repository.NewAgentRepository(store.DB)
+	agentService := service.NewAgentService(qianwen.GetClient(), store.DB, agentRepo)
 	agentCtrl := controller.NewAgentController(agentService)
 
 	v1 := r.Group("/api/v1")
@@ -44,6 +45,7 @@ func InitRouter() *gin.Engine {
 			auth.PUT("/profile", userCtrl.UpdateProfile)
 			auth.PUT("/avatar", userCtrl.UpdateAvatar)
 			auth.POST("/agent/chat", agentCtrl.ChatAgent)
+			auth.POST("/agent/create", agentCtrl.CreateAgent)
 		}
 	}
 

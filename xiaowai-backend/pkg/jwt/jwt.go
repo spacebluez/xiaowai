@@ -1,8 +1,8 @@
 package jwt
 
 import (
-	"spaceblue/config"
 	"time"
+	"xiaowai-backend/config"
 
 	"github.com/golang-jwt/jwt/v5"
 )

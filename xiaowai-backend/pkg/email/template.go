@@ -3,7 +3,7 @@ package email
 import "fmt"
 
 func VerificationCodeEmail(touser, code string) error {
-	subject := "【SPACEBLUE】身份验证"
+	subject := "【xiaowai】身份验证"
 	content := fmt.Sprintf(`
 		<div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee;">
 			<h2>验证码确认</h2>
