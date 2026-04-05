@@ -21,8 +21,8 @@ type Message struct {
 }
 
 type ContentPart struct {
-	Type     string    `json:"type"`                
-	Text     string    `json:"text,omitempty"`     
+	Type     string    `json:"type"`
+	Text     string    `json:"text,omitempty"`
 	ImageURL *ImageURL `json:"image_url,omitempty"`
 }
 
@@ -46,4 +46,8 @@ type Choice struct {
 	FinishReson string  `json:"finish_reason"`
 	Index       int     `json:"index"`
 	Logprobs    *any    `json:"loggrobs"`
+}
+
+type Messages struct {
+	Messages []Message `json:"messages"`
 }

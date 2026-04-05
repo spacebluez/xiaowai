@@ -2,16 +2,15 @@ package model
 
 import "time"
 
-type Agent struct {
+type Session struct {
 	ID        uint      `gorm:"column:id;primaryKey;autoIncrement;comment:自增ID"`
 	UserID    uint      `gorm:"column:user_id;index:idx_user_id;not null;comment:用户ID"`
-	Name      string    `gorm:"column:name;type:varchar(255);not null;comment:名称"`
-	ModelName string    `gorm:"column:model_name;type:varchar(255);not null;comment:模型名称"`
-	Persona   string    `gorm:"column:persona;type:text;not null;comment:人物设定"`
+	AgentID   uint      `gorm:"column:agent_id;index:idx_agent_id;not null;comment:智能体ID"`
+	Title     string    `gorm:"column:title;type:varchar(255);default:'未定义';comment:会话标题"`
 	CreatedAt time.Time `gorm:"column:created_at;type:timestamp;default:current_timestamp;comment:创建时间"`
 	UpdatedAt time.Time `gorm:"column:updated_at;type:timestamp;default:current_timestamp;comment:更新时间"`
 }
 
-func (a *Agent) TableName() string {
-	return "agent"
+func (Session) TableName() string {
+	return "sessions"
 }

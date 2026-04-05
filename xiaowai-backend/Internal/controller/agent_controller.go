@@ -35,7 +35,7 @@ func (ac *AgentController) ChatAgent(c *gin.Context) {
 		return
 	}
 
-	output, err := ac.agentService.ChatAgent(ctx, userID.(uint), req.Input)
+	output, err := ac.agentService.ChatAgent(ctx, userID.(uint), &req)
 	if err != nil {
 		logger.ErrorWithTrace(ctx, "对话失败", zap.Uint("id", userID.(uint)), zap.Error(err))
 		c.JSON(http.StatusInternalServerError, dto.APIResponse{Code: http.StatusInternalServerError, Msg: "对话失败，请稍后再试", Data: nil})
@@ -68,4 +68,23 @@ func (ac *AgentController) CreateAgent(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, dto.APIResponse{Code: 0, Msg: "ok", Data: nil})
+}
+
+func (ac *AgentController) GetAgentList(c *gin.Context) {
+	ctx := c.Request.Context()
+	logger.InfoWithTrace(ctx, "获取智能体列表")
+	userID, exists := c.Get("userID")
+	if !exists {
+		logger.ErrorWithTrace(ctx, "上下文中未找到用户ID")
+		c.JSON(http.StatusUnauthorized, dto.APIResponse{Code: http.StatusUnauthorized, Msg: "未授权，请重新登录", Data: nil})
+		return
+	}
+	agents, err := ac.agentService.GetAgentList(ctx, userID.(uint))
+	if err != nil {
+		logger.ErrorWithTrace(ctx, "获取智能体列表失败", zap.Error(err))
+		c.JSON(http.StatusInternalServerError, dto.APIResponse{Code: http.StatusInternalServerError, Msg: "获取智能体列表失败，请稍后再试", Data: nil})
+		return
+	}
+	logger.InfoWithTrace(ctx, "获取智能体列表成功", zap.Int("count", len(agents)))
+	c.JSON(http.StatusOK, dto.APIResponse{Code: 0, Msg: "ok", Data: dto.AgentListResponse{Agents: &agents}})
 }

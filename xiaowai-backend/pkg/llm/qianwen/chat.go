@@ -103,3 +103,22 @@ func (c *QianWenClient) TagImageByUrl(ctx context.Context, imagURL, input string
 	}
 	return "", fmt.Errorf("qianwen returned empty choices")
 }
+
+func (c *QianWenClient) ChatV2(ctx context.Context, input string, messages []Message) (output string, err error) {
+	req := &ChatCompletionRequest{
+		Model:   "",
+		Message: messages,
+	}
+	rsp, err := c.createChatCompletion(ctx, *req)
+	if err != nil {
+		return "", err
+	}
+	if len(rsp.Choices) > 0 {
+		output, ok := rsp.Choices[0].Message.Content.(string)
+		if !ok {
+			return "", fmt.Errorf("api 返回的类型不是string,实际类型是：%T", rsp.Choices[0].Message.Content)
+		}
+		return output, nil
+	}
+	return "", fmt.Errorf("qianwen returned empty choices")
+}
