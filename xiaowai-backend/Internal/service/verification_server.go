@@ -70,7 +70,11 @@ func (s *VerificationService) SendCode(ctx context.Context, emailAddr, clientIP 
 	endOfDay := time.Date(now.Year(), now.Month(), now.Day(), 23, 59, 59, 0, now.Location())
 	_ = s.redisClient.Set(ctx, dailyKey, strconv.Itoa(newCount), endOfDay.Sub(now)+time.Minute)
 
-	return email.VerificationCodeEmail(emailAddr, code)
+	if err := email.VerificationCodeEmail(emailAddr, code); err != nil {
+		return errors.New("邮箱地址不可投递，请检查后重试")
+	}
+
+	return nil
 }
 
 func (s *VerificationService) VerifyCode(ctx context.Context, emailAddr, code string) error {

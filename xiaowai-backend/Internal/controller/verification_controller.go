@@ -28,7 +28,11 @@ func (vc *VerificationController) SendCode(c *gin.Context) {
 			c.JSON(http.StatusTooManyRequests, dto.APIResponse{Code: http.StatusTooManyRequests, Msg: err.Error(), Data: nil})
 			return
 		}
-		c.JSON(http.StatusInternalServerError, dto.APIResponse{Code: http.StatusInternalServerError, Msg: err.Error(), Data: nil})
+		if err.Error() == "邮箱地址不可投递，请检查后重试" {
+			c.JSON(http.StatusBadRequest, dto.APIResponse{Code: http.StatusBadRequest, Msg: err.Error(), Data: nil})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, dto.APIResponse{Code: http.StatusInternalServerError, Msg: "验证码发送失败，请稍后重试", Data: nil})
 		return
 	}
 	c.JSON(http.StatusOK, dto.APIResponse{Code: 0, Msg: "验证码已发送，请查收邮件", Data: nil})
