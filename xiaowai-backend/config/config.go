@@ -35,10 +35,10 @@ type Config struct {
 	initialized bool
 	Env         string `mapstructure:"env"`
 	DB          struct {
-		Spaceblue DB `mapstructure:"spaceblue"`
+		Xiaowai DB `mapstructure:"xiaowai"`
 	} `mapstructure:"db"`
 	Redis struct {
-		Spaceblue Redis `mapstructure:"spaceblue"`
+		Xiaowai Redis `mapstructure:"xiaowai"`
 	} `mapstructure:"redis"`
 	Oss struct {
 		Default Oss `mapstructure:"default"`

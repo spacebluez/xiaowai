@@ -20,8 +20,8 @@ type Client struct {
 
 func Init() {
 	once.Do(func() {
-		client = NewClient(config.Get().Redis.Spaceblue.NameSpace, config.Get().Redis.Spaceblue.Addr,
-			config.Get().Redis.Spaceblue.Password, config.Get().Redis.Spaceblue.DB)
+		client = NewClient(config.Get().Redis.Xiaowai.NameSpace, config.Get().Redis.Xiaowai.Addr,
+			config.Get().Redis.Xiaowai.Password, config.Get().Redis.Xiaowai.DB)
 
 	})
 }

@@ -17,11 +17,11 @@ func Init() error {
 	var initErr error
 	once.Do(func() {
 		dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-			config.Get().DB.Spaceblue.UserName,
-			config.Get().DB.Spaceblue.PassWord,
-			config.Get().DB.Spaceblue.Host,
-			config.Get().DB.Spaceblue.Port,
-			config.Get().DB.Spaceblue.DBName,
+			config.Get().DB.Xiaowai.UserName,
+			config.Get().DB.Xiaowai.PassWord,
+			config.Get().DB.Xiaowai.Host,
+			config.Get().DB.Xiaowai.Port,
+			config.Get().DB.Xiaowai.DBName,
 		)
 		DB, initErr = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 		if initErr != nil {
