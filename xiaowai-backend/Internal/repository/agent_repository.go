@@ -40,7 +40,7 @@ func (r *AgentRepository) GetAgentList(ctx context.Context, db *gorm.DB, id uint
 	return agents, nil
 }
 
-func (r *AgentRepository) FindAgentByID(ctx context.Context, db *gorm.DB, id uint) (*model.Agent, error) {
+func (r *AgentRepository) GetAgentByID(ctx context.Context, db *gorm.DB, id uint) (*model.Agent, error) {
 	var agent model.Agent
 	result := db.WithContext(ctx).Model(&model.Agent{}).
 		Where("id = ?", id).
@@ -49,4 +49,15 @@ func (r *AgentRepository) FindAgentByID(ctx context.Context, db *gorm.DB, id uin
 		return nil, result.Error
 	}
 	return &agent, nil
+}
+
+func (r *AgentRepository) UpdateAgent(ctx context.Context, db *gorm.DB, agent *model.Agent) error {
+	logger.InfoWithTrace(ctx, "更新智能体配置", zap.Uint("id", agent.ID))
+	result := db.WithContext(ctx).Model(&model.Agent{}).
+		Where("id = ?", agent.ID).
+		Updates(agent)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
 }

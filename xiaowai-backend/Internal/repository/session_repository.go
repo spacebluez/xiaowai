@@ -15,21 +15,37 @@ func NewSessionRepository(db *gorm.DB) *SessionRepository {
 	return &SessionRepository{db: db}
 }
 
-func (s *SessionRepository) CreateSession(ctx context.Context, session *model.Session) (uint, error) {
+func (s *SessionRepository) CreateSession(ctx context.Context, session *model.Session) error {
 	if err := s.db.WithContext(ctx).Create(session).Error; err != nil {
-		return 0, err
+		return err
 	}
-	return session.ID, nil
+	return nil
 }
 
-func (s *SessionRepository) FindSessionByUserIDAndSessionID(ctx context.Context, userID uint, sessionID uint) (*model.Session, error) {
+func (s *SessionRepository) GetSessionByID(ctx context.Context, sessionID uint) (*model.Session, error) {
 	var session model.Session
-	if err := s.db.WithContext(ctx).Where("user_id = ? AND id = ?", userID, sessionID).First(&session).Error; err != nil {
+	if err := s.db.WithContext(ctx).Where("id = ?", sessionID).First(&session).Error; err != nil {
 		return nil, err
 	}
 	return &session, nil
 }
 
-func (s *SessionRepository) SetSessionTitle(ctx context.Context, id uint, title string) error {
-	return s.db.WithContext(ctx).Where("id = ?", id).Update("title", title).Error
+func (s *SessionRepository) GetSessionByUserID(ctx context.Context, userID uint) (*model.Session, error) {
+	var session model.Session
+	if err := s.db.WithContext(ctx).Where("user_id = ?", userID).First(&session).Error; err != nil {
+		return nil, err
+	}
+	return &session, nil
+}
+
+func (s *SessionRepository) GetSessionListByUserID(ctx context.Context, userID uint) (*[]model.Session, error) {
+	var sessions []model.Session
+	if err := s.db.WithContext(ctx).Where("user_id = ?", userID).Order("created_at DESC").Find(&sessions).Error; err != nil {
+		return nil, err
+	}
+	return &sessions, nil
+}
+
+func (s *SessionRepository) SetTitle(ctx context.Context, sessionID uint, title string) error {
+	return s.db.WithContext(ctx).Model(&model.Session{}).Where("id = ?", sessionID).Update("title", title).Error
 }

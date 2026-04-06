@@ -104,10 +104,14 @@ func (c *QianWenClient) TagImageByUrl(ctx context.Context, imagURL, input string
 	return "", fmt.Errorf("qianwen returned empty choices")
 }
 
-func (c *QianWenClient) ChatV2(ctx context.Context, input string, messages []Message) (output string, err error) {
+func (c *QianWenClient) ChatV2(ctx context.Context, input string, messages Messages) (output string, err error) {
+	messages.Messages = append(messages.Messages, Message{
+		Role:    "user",
+		Content: input,
+	})
 	req := &ChatCompletionRequest{
 		Model:   "",
-		Message: messages,
+		Message: messages.Messages,
 	}
 	rsp, err := c.createChatCompletion(ctx, *req)
 	if err != nil {

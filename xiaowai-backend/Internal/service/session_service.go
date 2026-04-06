@@ -14,9 +14,13 @@ func NewSessionService(sessionRepo *repository.SessionRepository) *SessionServic
 	return &SessionService{sessionRepo: sessionRepo}
 }
 
-func (s *SessionService) GetSession(ctx context.Context, userID uint) ([]model.Session, error) {
-	session, err := s.sessionRepo.FindSessionByUserID(ctx, userID)
-	if err != nil {
+func (s *SessionService) CreateSession(ctx context.Context, userID uint, agentID uint) (*model.Session, error) {
+	session := &model.Session{
+		UserID:  userID,
+		AgentID: agentID,
+		Title:   "未定义会话",
+	}
+	if err := s.sessionRepo.CreateSession(ctx, session); err != nil {
 		return nil, err
 	}
 	return session, nil

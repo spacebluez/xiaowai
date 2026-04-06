@@ -1,15 +1,22 @@
 package dto
 
-import "xiaowai-backend/Internal/model"
+import (
+	"time"
+	"xiaowai-backend/Internal/model"
+)
 
 type ChatAgentRequest struct {
-	AgentID   uint   `json:"agent_id" binding:"required"`
-	Input     string `json:"input" binding:"required"`
-	SessionID uint   `json:"session_id,omitempty" binding:"required"`
+	AgentID   uint      `json:"agent_id" binding:"required"`
+	SessionID uint      `json:"session_id,omitempty" binding:"required"`
+	Content   string    `json:"content" binding:"required"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
-type ChatAgentData struct {
-	Output string `json:"output"`
+type ChatAgentResponse struct {
+	ID        uint      `json:"id"`
+	Role      string    `json:"role"`
+	Content   string    `json:"content"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 type CreateAgentRequest struct {

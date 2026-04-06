@@ -30,6 +30,10 @@ func InitRouter() *gin.Engine {
 	agentService := service.NewAgentService(qianwen.GetClient(), store.DB, agentRepo)
 	agentCtrl := controller.NewAgentController(agentService)
 
+	sessionRepo := repository.NewSessionRepository(store.DB)
+	sessionService := service.NewSessionService(sessionRepo)
+	sessionCtrl := controller.NewSessionController(sessionService)
+
 	v1 := r.Group("/api/v1")
 	{
 		v1.POST("/user/register", userCtrl.Register)
@@ -46,6 +50,8 @@ func InitRouter() *gin.Engine {
 			auth.PUT("/avatar", userCtrl.UpdateAvatar)
 			auth.POST("/agent/chat", agentCtrl.ChatAgent)
 			auth.POST("/agent/create", agentCtrl.CreateAgent)
+			auth.GET("/agent/list", agentCtrl.GetAgentList)
+			auth.POST("/session/create", sessionCtrl.CreateSession)
 		}
 	}
 

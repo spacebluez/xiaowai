@@ -35,14 +35,19 @@ func (ac *AgentController) ChatAgent(c *gin.Context) {
 		return
 	}
 
-	output, err := ac.agentService.ChatAgent(ctx, userID.(uint), &req)
+	message, err := ac.agentService.ChatAgent(ctx, userID.(uint), &req)
 	if err != nil {
 		logger.ErrorWithTrace(ctx, "对话失败", zap.Uint("id", userID.(uint)), zap.Error(err))
 		c.JSON(http.StatusInternalServerError, dto.APIResponse{Code: http.StatusInternalServerError, Msg: "对话失败，请稍后再试", Data: nil})
 		return
 	}
 
-	c.JSON(http.StatusOK, dto.APIResponse{Code: 0, Msg: "ok", Data: dto.ChatAgentData{Output: output}})
+	c.JSON(http.StatusOK, dto.APIResponse{Code: 0, Msg: "ok", Data: dto.ChatAgentResponse{
+		SessionID: message.SessionID,
+		Role:      message.Role,
+		Content:   message.Content,
+		CreatedAt: message.CreatedAt,
+	}})
 }
 
 func (ac *AgentController) CreateAgent(c *gin.Context) {
