@@ -7,6 +7,18 @@ type CreateSessionRequest struct {
 }
 
 type CreateSessionResponse struct {
+	Session Session `json:"session"`
+}
+
+type GetSessionListRequest struct {
+	UserID uint `json:"user_id" binding:"required"`
+}
+
+type GetSessionListResponse struct {
+	SessionList []Session `json:"session_list"`
+}
+
+type Session struct {
 	ID        uint      `json:"id"`
 	UserID    uint      `json:"user_id"`
 	AgentID   uint      `json:"agent_id"`

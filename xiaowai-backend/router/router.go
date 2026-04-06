@@ -26,13 +26,14 @@ func InitRouter() *gin.Engine {
 	userCtrl := controller.NewUserController(userService)
 	verifyCtrl := controller.NewVerificationController(verificationService)
 
-	agentRepo := repository.NewAgentRepository(store.DB)
-	agentService := service.NewAgentService(qianwen.GetClient(), store.DB, agentRepo)
-	agentCtrl := controller.NewAgentController(agentService)
-
 	sessionRepo := repository.NewSessionRepository(store.DB)
 	sessionService := service.NewSessionService(sessionRepo)
 	sessionCtrl := controller.NewSessionController(sessionService)
+
+	agentRepo := repository.NewAgentRepository(store.DB)
+	messageRepo := repository.NewMessageRepository(store.DB)
+	agentService := service.NewAgentService(qianwen.GetClient(), store.DB, agentRepo, sessionRepo, messageRepo)
+	agentCtrl := controller.NewAgentController(agentService)
 
 	v1 := r.Group("/api/v1")
 	{
@@ -51,6 +52,8 @@ func InitRouter() *gin.Engine {
 			auth.POST("/agent/chat", agentCtrl.ChatAgent)
 			auth.POST("/agent/create", agentCtrl.CreateAgent)
 			auth.GET("/agent/list", agentCtrl.GetAgentList)
+			auth.PUT("/agent/update", agentCtrl.UpdateAgent)
+			auth.GET("/session/list", sessionCtrl.GetSessionListByUserID)
 			auth.POST("/session/create", sessionCtrl.CreateSession)
 		}
 	}

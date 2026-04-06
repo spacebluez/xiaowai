@@ -27,6 +27,7 @@ func NewAgentService(agent *qianwen.QianWenClient, db *gorm.DB, agentRepo *repos
 		agent:       agent,
 		agentRepo:   agentRepo,
 		sessionRepo: sessionRepo,
+		messageRepo: messageRepo,
 		db:          db,
 	}
 }
@@ -159,4 +160,20 @@ func (s *AgentService) ChatVerify(ctx context.Context, id uint, SessionID uint, 
 		return false, errors.New("会话用户与会体配置不匹配")
 	}
 	return true, nil
+}
+
+func (s *AgentService) UpdateAgent(ctx context.Context, id uint, req *dto.UpdateAgentRequest) error {
+	logger.InfoWithTrace(ctx, "更新智能体配置", zap.Uint("id", id), zap.Any("req", req))
+	agent := &model.Agent{
+		ID:        req.AgentID,
+		Name:      req.Name,
+		ModelName: req.ModelName,
+		Persona:   req.Persona,
+	}
+	if err := s.agentRepo.UpdateAgent(ctx, s.db, agent); err != nil {
+		logger.ErrorWithTrace(ctx, "更新智能体配置失败", zap.Error(err))
+		return err
+	}
+	logger.InfoWithTrace(ctx, "智能体配置更新成功", zap.Uint("id", agent.ID))
+	return nil
 }
