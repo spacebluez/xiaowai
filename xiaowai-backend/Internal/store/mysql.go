@@ -27,7 +27,10 @@ func Init() error {
 		if initErr != nil {
 			return
 		}
-		initErr = DB.AutoMigrate(&model.User{}, &model.UserProfile{})
+		initErr = DB.AutoMigrate(&model.User{}, &model.UserProfile{}, &model.Agent{}, &model.Message{}, &model.Session{})
+		if initErr != nil {
+			return
+		}
 	})
 	return initErr
 }

@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"time"
 	"xiaowai-backend/Internal/dto"
 	"xiaowai-backend/Internal/model"
 	"xiaowai-backend/Internal/repository"
@@ -16,10 +17,13 @@ func NewSessionService(sessionRepo *repository.SessionRepository) *SessionServic
 }
 
 func (s *SessionService) CreateSession(ctx context.Context, userID uint, agentID uint) (*model.Session, error) {
+	now := time.Now()
 	session := &model.Session{
-		UserID:  userID,
-		AgentID: agentID,
-		Title:   "未定义会话",
+		UserID:    userID,
+		AgentID:   agentID,
+		Title:     "未定义会话",
+		CreatedAt: now,
+		UpdatedAt: now,
 	}
 	if err := s.sessionRepo.CreateSession(ctx, session); err != nil {
 		return nil, err

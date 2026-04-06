@@ -1,2 +1,4 @@
 xiaowai-backend/config/config.yaml
-xiaowai/logs
+xiaowai/xiaowai-backend/logs
+.trae/
+.vscode/

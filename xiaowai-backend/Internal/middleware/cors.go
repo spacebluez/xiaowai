@@ -5,7 +5,12 @@ import "github.com/gin-gonic/gin"
 func CORS() gin.HandlerFunc {
 	allowed := map[string]bool{
 		"http://localhost:5173":       true,
-		"http://47.111.12.222:5173": true,
+		"http://localhost:5174":       true,
+		"http://localhost":            true,
+		"http://localhost:80":         true,
+		"http://47.111.12.222:5173":   true,
+		"http://47.111.12.222":        true,
+		"http://47.111.12.222:80":     true,
 	}
 
 	return func(c *gin.Context) {
