@@ -53,17 +53,6 @@ func (s *AgentService) ChatAgent(ctx context.Context, id uint, req *dto.ChatAgen
 	SessionID := req.SessionID
 	Content := req.Content
 	AgentID := req.AgentID
-	if SessionID == 0 {
-		session := &model.Session{
-			UserID:  id,
-			AgentID: AgentID,
-		}
-		if err = s.sessionRepo.CreateSession(ctx, session); err != nil {
-			logger.ErrorWithTrace(ctx, "创建会话失败", zap.Error(err))
-			return nil, err
-		}
-		SessionID = session.ID
-	}
 	if ok, err := s.ChatVerify(ctx, id, SessionID, AgentID); ok == false || err != nil {
 		logger.ErrorWithTrace(ctx, "验证对话失败", zap.Error(err))
 		return nil, err
