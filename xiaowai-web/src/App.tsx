@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Brain, Users, MessageSquare, Settings, LogIn, LogOut, ChevronRight, Menu, X, Sun, Moon } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import './App.css'
 
 function App() {
@@ -7,6 +8,7 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const navigate = useNavigate()
 
   // 模拟加载状态
   useEffect(() => {
@@ -73,7 +75,7 @@ function App() {
                   <a href="#" className="nav-link">功能</a>
                   <a href="#" className="nav-link">文档</a>
                   <a href="#" className="nav-link">价格</a>
-                  <button className="btn btn-outline">
+                  <button className="btn btn-outline" onClick={() => navigate('/login')}>
                     <LogIn className="btn-icon" />
                     登录
                   </button>
@@ -111,7 +113,7 @@ function App() {
                   <a href="#" className="mobile-nav-link">功能</a>
                   <a href="#" className="mobile-nav-link">文档</a>
                   <a href="#" className="mobile-nav-link">价格</a>
-                  <button className="btn btn-outline w-full">
+                  <button className="btn btn-outline w-full" onClick={() => navigate('/login')}>
                     <LogIn className="btn-icon" />
                     登录
                   </button>

@@ -1,0 +1,3 @@
+{"level":"DEBUG","ts":"2026-04-07T18:38:32.701+0800","caller":"service/user_service.go:104","msg":"用户登录验证","username":"spaceblue","trace_id":"fa4779a4-152e-4b30-bc20-be75615efb08"}
+{"level":"DEBUG","ts":"2026-04-07T18:38:32.702+0800","caller":"repository/user_repository.go:61","msg":"查询用户信息","username":"spaceblue","trace_id":"fa4779a4-152e-4b30-bc20-be75615efb08"}
+{"level":"DEBUG","ts":"2026-04-07T18:38:32.703+0800","caller":"repository/user_repository.go:71","msg":"查询用户成功","user_id":1,"username":"spaceblue","trace_id":"fa4779a4-152e-4b30-bc20-be75615efb08"}
