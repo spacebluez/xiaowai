@@ -6,6 +6,7 @@ import Register from './pages/Register'
 import Profile from './pages/Profile'
 import AgentManagement from './pages/AgentManagement'
 import SessionManagement from './pages/SessionManagement'
+import ChatPage from './pages/ChatPage'
 import './App.css'
 
 function Main() {
@@ -411,6 +412,7 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/agents" element={<AgentManagement />} />
       <Route path="/sessions" element={<SessionManagement />} />
+      <Route path="/chat/:agentId" element={<ChatPage />} />
     </Routes>
   )
 }

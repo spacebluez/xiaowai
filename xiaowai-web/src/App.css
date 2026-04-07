@@ -1325,61 +1325,47 @@ body {
   line-height: 1.5;
 }
 
-/* 聊天窗口 */
-.chat-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.chat-modal-content {
-  width: 100%;
-  max-width: 600px;
-  height: 80vh;
-  background-color: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
+/* 聊天页面 */
+.chat-page {
+  min-height: 100vh;
+  background-color: var(--background);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
-.chat-modal-header {
-  padding: 1.5rem;
+.chat-header {
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--border);
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 1rem;
+  background-color: var(--card);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.chat-modal-header h3 {
-  font-size: 1.125rem;
+.chat-header h1 {
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--foreground);
   margin: 0;
+  flex: 1;
 }
 
-.close-button {
+.back-button {
   background: none;
   border: none;
-  color: var(--muted-foreground);
+  color: var(--foreground);
   cursor: pointer;
   padding: 0.5rem;
   border-radius: var(--radius);
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
-.close-button:hover {
+.back-button:hover {
   background-color: var(--accent);
-  color: var(--foreground);
 }
 
 .chat-messages {
@@ -1388,56 +1374,114 @@ body {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .chat-message {
   max-width: 80%;
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  border-radius: 18px;
   line-height: 1.5;
+  position: relative;
 }
 
 .chat-message.user {
   align-self: flex-end;
   background-color: var(--primary);
   color: var(--primary-foreground);
-  border-bottom-right-radius: 0;
+  border-bottom-right-radius: 4px;
 }
 
 .chat-message.assistant {
   align-self: flex-start;
   background-color: var(--muted);
   color: var(--foreground);
-  border-bottom-left-radius: 0;
+  border-bottom-left-radius: 4px;
 }
 
 .chat-input-container {
-  padding: 1.5rem;
+  padding: 1rem 1.5rem;
   border-top: 1px solid var(--border);
   display: flex;
   gap: 0.75rem;
+  background-color: var(--card);
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .chat-input {
   flex: 1;
-  padding: 0.75rem 1rem;
+  padding: 0.875rem 1.25rem;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 24px;
   font-size: 0.875rem;
   background-color: var(--background);
   color: var(--foreground);
-  transition: border-color 0.2s ease;
+  transition: all 0.2s ease;
+  resize: none;
+  min-height: 48px;
+  max-height: 120px;
+  overflow-y: auto;
 }
 
 .chat-input:focus {
   outline: none;
   border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .chat-send-button {
   flex-shrink: 0;
-  white-space: nowrap;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.loading-indicator {
+  display: inline-block;
+  margin-left: 0.5rem;
+}
+
+.loader {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .chat-messages {
+    padding: 1rem;
+    max-width: 100%;
+  }
+  
+  .chat-input-container {
+    padding: 0.75rem 1rem;
+    max-width: 100%;
+  }
+  
+  .chat-message {
+    max-width: 85%;
+  }
 }
 
 /* 会话管理页面 */

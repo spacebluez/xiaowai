@@ -13,7 +13,7 @@ func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 从cookie中获取token
 		tokenStr, err := c.Cookie("token")
-		
+
 		// 如果cookie中没有token，从请求头中获取
 		if err != nil {
 			tokenStr = c.GetHeader("Authorization")

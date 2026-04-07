@@ -22,12 +22,6 @@ function AgentManagement() {
     persona: ''
   })
   const [message, setMessage] = useState('')
-  const [showChat, setShowChat] = useState(false)
-  const [chatAgent, setChatAgent] = useState<Agent | null>(null)
-  const [chatSessionId, setChatSessionId] = useState<number | null>(null)
-  const [chatMessages, setChatMessages] = useState<{ role: string; content: string }[]>([])
-  const [chatInput, setChatInput] = useState('')
-  const [isChatting, setIsChatting] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [agentToDelete, setAgentToDelete] = useState<number | null>(null)
   const [isSaving, setIsSaving] = useState(false)
@@ -162,59 +156,12 @@ function AgentManagement() {
     setAgentToDelete(null)
   }
 
-  const handleStartChat = async (agent: any) => {
-    setChatAgent(agent)
-    setChatMessages([])
-    setChatInput('')
-    
-    try {
-      console.log('Creating session with agent:', agent)
-      console.log('Sending data:', { agent_id: agent.ID })
-      // 创建会话
-      const response = await sessionApi.createSession({ agent_id: agent.ID })
-      setChatSessionId(response.data.session.id)
-      setShowChat(true)
-    } catch (error: any) {
-      console.error('创建会话失败:', error)
-      setMessage(`创建会话失败: ${error.message}`)
-    }
+  const handleStartChat = (agent: any) => {
+    // 跳转到新的聊天页面
+    navigate(`/chat/${agent.ID}`)
   }
 
-  const handleSendMessage = async () => {
-    if (!chatInput.trim() || !chatAgent || !chatSessionId) {
-      return
-    }
 
-    const message = chatInput.trim()
-    setChatInput('')
-    
-    // 添加用户消息
-    setChatMessages(prev => [...prev, { role: 'user', content: message }])
-    setIsChatting(true)
-
-    try {
-      const response = await agentApi.chatAgent({
-        agent_id: chatAgent.ID,
-        session_id: chatSessionId,
-        content: message,
-        createdAt: new Date().toISOString()
-      })
-      
-      // 添加智能体回复
-      setChatMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: response.data.content 
-      }])
-    } catch (error: any) {
-      console.error('发送消息失败:', error)
-      setChatMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: `发送失败: ${error.message}` 
-      }])
-    } finally {
-      setIsChatting(false)
-    }
-  }
 
   const handleEdit = (agent: any) => {
     setEditingAgent(agent)
@@ -414,52 +361,7 @@ function AgentManagement() {
           </div>
         )}
 
-        {/* 聊天窗口 */}
-        {showChat && chatAgent && (
-          <div className="chat-modal">
-            <div className="chat-modal-content">
-              <div className="chat-modal-header">
-                <h3>与 {chatAgent.Name} 聊天</h3>
-                <button
-                  className="close-button"
-                  onClick={() => setShowChat(false)}
-                >
-                  <X size={20} />
-                </button>
-              </div>
-              <div className="chat-messages">
-                {chatMessages.map((msg, index) => (
-                  <div key={index} className={`chat-message ${msg.role}`}>
-                    <div className="message-content">{msg.content}</div>
-                  </div>
-                ))}
-                {isChatting && (
-                  <div className="chat-message assistant">
-                    <div className="message-content">正在思考...</div>
-                  </div>
-                )}
-              </div>
-              <div className="chat-input-container">
-                <input
-                  type="text"
-                  value={chatInput}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder="输入消息..."
-                  disabled={isChatting}
-                  className="chat-input"
-                />
-                <button
-                  className="btn btn-primary chat-send-button"
-                  onClick={handleSendMessage}
-                  disabled={isChatting || !chatInput.trim()}
-                >
-                  发送
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+
 
         {/* 自定义删除确认提示框 */}
         {showConfirm && (
