@@ -194,4 +194,11 @@ export const sessionApi = {
       body: JSON.stringify(data),
     });
   },
+  
+  // 获取会话历史消息
+  getSessionMessages: async (sessionId: number) => {
+    return request<{ data: { messages: any[] }; msg: string }>(`/user/session/${sessionId}/messages`, {
+      method: 'GET',
+    });
+  },
 };
