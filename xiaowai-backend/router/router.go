@@ -41,14 +41,11 @@ func InitRouter() *gin.Engine {
 		v1.POST("/user/login", userCtrl.Login)
 		v1.POST("/user/logout", userCtrl.Logout)
 		v1.POST("/verification/send-code", verifyCtrl.SendCode)
-		v1.GET("/user/:id/avatar", userCtrl.PreviewAvatar)
-
 		auth := v1.Group("/user")
 		auth.Use(middleware.AuthMiddleware())
 		{
 			auth.GET("/profile", userCtrl.GetProfile)
 			auth.PUT("/profile", userCtrl.UpdateProfile)
-			auth.PUT("/avatar", userCtrl.UpdateAvatar)
 			auth.POST("/agent/chat", agentCtrl.ChatAgent)
 			auth.POST("/agent/create", agentCtrl.CreateAgent)
 			auth.GET("/agent/list", agentCtrl.GetAgentList)

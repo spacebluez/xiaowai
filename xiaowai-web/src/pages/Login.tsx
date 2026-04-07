@@ -77,8 +77,9 @@ function Login() {
       const data = await response.json()
 
       if (response.ok) {
-        // 保存token到localStorage
+        // 保存token和用户名到localStorage
         localStorage.setItem('token', data.data.token)
+        localStorage.setItem('username', formData.username)
         // 跳转到主页
         navigate('/')
       } else {

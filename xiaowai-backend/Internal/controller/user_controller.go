@@ -1,9 +1,7 @@
 package controller
 
 import (
-	"io"
 	"net/http"
-	"strconv"
 	"xiaowai-backend/Internal/dto"
 	"xiaowai-backend/Internal/model"
 	"xiaowai-backend/Internal/service"
@@ -157,84 +155,14 @@ func (uc *UserController) GetProfile(c *gin.Context) {
 	c.JSON(http.StatusOK, dto.APIResponse{Code: 0, Msg: "ok", Data: toUserProfileData(profile)})
 }
 
-func (uc *UserController) UpdateAvatar(c *gin.Context) {
-	var req dto.AvatarRequest
-	ctx := c.Request.Context()
-	userID, exists := c.Get("userID")
-	if !exists {
-		logger.ErrorWithTrace(ctx, "上下文中未找到用户ID")
-		c.JSON(http.StatusUnauthorized, dto.APIResponse{Code: http.StatusUnauthorized, Msg: "未授权，请重新登录", Data: nil})
-		return
-	}
-
-	if err := c.ShouldBind(&req); err != nil {
-		logger.WarnWithTrace(ctx, "用户未上传图片", zap.Uint("id", userID.(uint)), zap.Error(err))
-		c.JSON(http.StatusBadRequest, dto.APIResponse{Code: http.StatusBadRequest, Msg: "请上传图片", Data: nil})
-		return
-	}
-
-	fileHeader := req.Avatar
-
-	if fileHeader.Size > 50*1024*1024 {
-		c.JSON(http.StatusBadRequest, dto.APIResponse{Code: http.StatusBadRequest, Msg: "图片大小不能超过 50MB", Data: nil})
-		return
-	}
-	file, err := fileHeader.Open()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, dto.APIResponse{Code: http.StatusInternalServerError, Msg: "读取文件失败", Data: nil})
-		return
-	}
-	defer file.Close()
-
-	if err := uc.userService.UpdateAvatar(ctx, file, userID.(uint)); err != nil {
-		logger.ErrorWithTrace(ctx, "更新用户头像失败", zap.Uint("id", userID.(uint)), zap.Error(err))
-		c.JSON(http.StatusInternalServerError, dto.APIResponse{Code: http.StatusInternalServerError, Msg: "更新失败: " + err.Error(), Data: nil})
-		return
-	}
-	logger.InfoWithTrace(ctx, "用户头像更新成功", zap.Uint("id", userID.(uint)))
-	c.JSON(http.StatusOK, dto.APIResponse{Code: 0, Msg: "更新成功", Data: nil})
-}
-
-func (uc *UserController) PreviewAvatar(c *gin.Context) {
-	ctx := c.Request.Context()
-	idParam := c.Param("id")
-
-	id64, err := strconv.ParseUint(idParam, 10, 32)
-	if err != nil || id64 == 0 {
-		c.JSON(http.StatusBadRequest, dto.APIResponse{Code: http.StatusBadRequest, Msg: "用户ID无效", Data: nil})
-		return
-	}
-
-	body, contentType, err := uc.userService.GetAvatarPreview(ctx, uint(id64))
-	if err != nil {
-		if err.Error() == "用户不存在" {
-			c.JSON(http.StatusNotFound, dto.APIResponse{Code: http.StatusNotFound, Msg: err.Error(), Data: nil})
-			return
-		}
-		if err.Error() == "头像不存在" || err.Error() == "头像地址无效" {
-			c.JSON(http.StatusNotFound, dto.APIResponse{Code: http.StatusNotFound, Msg: err.Error(), Data: nil})
-			return
-		}
-		logger.ErrorWithTrace(ctx, "预览头像失败", zap.Uint("id", uint(id64)), zap.Error(err))
-		c.JSON(http.StatusInternalServerError, dto.APIResponse{Code: http.StatusInternalServerError, Msg: "头像预览失败", Data: nil})
-		return
-	}
-	defer body.Close()
-
-	c.Header("Content-Type", contentType)
-	_, _ = io.Copy(c.Writer, body)
-}
-
 func toUserProfileData(profile *model.UserProfile) dto.UserProfileData {
 	return dto.UserProfileData{
 		ID:         profile.ID,
 		NickName:   profile.NickName,
 		BirthDay:   profile.BirthDay,
-		Avatar:     profile.Avatar,
 		Gender:     profile.Gender,
 		Hobbies:    profile.Hobbies,
 		Signature:  profile.Signature,
 		Experience: profile.Experience,
-		UpdatedAt:  profile.UpdatedAt,
 	}
 }

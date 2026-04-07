@@ -11,11 +11,22 @@ import (
 
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// 从cookie中获取token
 		tokenStr, err := c.Cookie("token")
+		
+		// 如果cookie中没有token，从请求头中获取
 		if err != nil {
-			c.JSON(401, gin.H{"msg": "请先登录"})
-			c.Abort()
-			return
+			tokenStr = c.GetHeader("Authorization")
+			// 移除Bearer前缀
+			if len(tokenStr) > 7 && tokenStr[:7] == "Bearer " {
+				tokenStr = tokenStr[7:]
+			}
+			// 如果请求头中也没有token，返回未授权
+			if tokenStr == "" {
+				c.JSON(401, gin.H{"msg": "请先登录"})
+				c.Abort()
+				return
+			}
 		}
 
 		claims := &jwt.Claims{}

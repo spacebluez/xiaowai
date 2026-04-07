@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 	"xiaowai-backend/Internal/dto"
 	"xiaowai-backend/Internal/model"
@@ -58,12 +59,17 @@ func (s *AgentService) ChatAgent(ctx context.Context, id uint, req *dto.ChatAgen
 		logger.ErrorWithTrace(ctx, "验证对话失败", zap.Error(err))
 		return nil, err
 	}
+	agent, err := s.agentRepo.GetAgentByID(ctx, s.db, AgentID)
+	if err != nil {
+		logger.ErrorWithTrace(ctx, "获取智能体配置失败", zap.Error(err))
+		return nil, err
+	}
 	messages, err := s.messageRepo.FindMessageBySessionIDLimit(ctx, SessionID, 10)
 	if err != nil {
 		logger.ErrorWithTrace(ctx, "获取消息失败", zap.Error(err))
 		return nil, err
 	}
-	qianwenmessages := ConvertToLLMMessages(messages)
+	qianwenmessages := ConvertToLLMMessages(messages, agent.Name, agent.Persona)
 	output, err := s.agent.ChatV2(ctx, Content, qianwenmessages)
 	if err != nil {
 		logger.ErrorWithTrace(ctx, "对话失败", zap.Error(err))
@@ -78,7 +84,7 @@ func (s *AgentService) ChatAgent(ctx context.Context, id uint, req *dto.ChatAgen
 		CreatedAt: time.Now(),
 	}, nil
 }
-func ConvertToLLMMessages(dbMsgs []model.Message) qianwen.Messages {
+func ConvertToLLMMessages(dbMsgs []model.Message, agentName string, persona string) qianwen.Messages {
 	llmMsgs := make([]qianwen.Message, 0, len(dbMsgs))
 	for _, m := range dbMsgs {
 		llmMsgs = append(llmMsgs, qianwen.Message{
@@ -86,6 +92,10 @@ func ConvertToLLMMessages(dbMsgs []model.Message) qianwen.Messages {
 			Content: m.Content,
 		})
 	}
+	llmMsgs = append(llmMsgs, qianwen.Message{
+		Role:    "system",
+		Content: fmt.Sprintf("You are a helpful assistant. Your name is %s. Your persona is %s.", agentName, persona),
+	})
 	return qianwen.Messages{
 		Messages: llmMsgs,
 	}

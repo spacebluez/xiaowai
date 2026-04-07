@@ -72,7 +72,6 @@ func (s *UserService) Register(ctx context.Context, username, emailAddr, phone s
 	profile := &model.UserProfile{
 		Experience: 0,
 		Gender:     "unknown",
-		Avatar:     "default_avatar.png",
 	}
 
 	err = s.db.Transaction(func(tx *gorm.DB) error {
@@ -144,7 +143,6 @@ func (s *UserService) UpdateProfile(ctx context.Context, id uint, req dto.Profil
 	profile := &model.UserProfile{
 		ID:        id,
 		NickName:  req.NickName,
-		Avatar:    req.Avatar,
 		Gender:    req.Gender,
 		Hobbies:   req.Hobbies,
 		Signature: req.Signature,
@@ -200,35 +198,4 @@ func (s *UserService) UpdateAvatar(ctx context.Context, file io.Reader, id uint)
 	}
 	logger.InfoWithTrace(ctx, "更新用户头像成功", zap.Uint("id", id))
 	return nil
-}
-
-func (s *UserService) GetAvatarPreview(ctx context.Context, id uint) (io.ReadCloser, string, error) {
-	avatarPath, err := s.userRepo.GetAvatarPathByUserID(ctx, id)
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, "", errors.New("用户不存在")
-		}
-		return nil, "", err
-	}
-	if avatarPath == "" {
-		return nil, "", errors.New("头像不存在")
-	}
-	if !strings.HasPrefix(avatarPath, "oss://") {
-		return nil, "", errors.New("头像地址无效")
-	}
-
-	object, err := oss.GetObjectByPath(ctx, avatarPath)
-	if err != nil {
-		return nil, "", err
-	}
-	if object.Body == nil {
-		return nil, "", errors.New("头像读取失败")
-	}
-
-	contentType := "image/jpeg"
-	if object.ContentType != nil && *object.ContentType != "" {
-		contentType = *object.ContentType
-	}
-
-	return object.Body, contentType, nil
 }

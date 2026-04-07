@@ -1,9 +1,14 @@
 import { useState, useEffect } from 'react'
-import { Brain, Users, MessageSquare, Settings, LogIn, LogOut, ChevronRight, Menu, X, Sun, Moon } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Routes, Route, Link, useNavigate } from 'react-router-dom'
+import { Brain, Users, MessageSquare, Settings, LogIn, LogOut, ChevronRight, Menu, X, Sun, Moon, User, List } from 'lucide-react'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import Profile from './pages/Profile'
+import AgentManagement from './pages/AgentManagement'
+import SessionManagement from './pages/SessionManagement'
 import './App.css'
 
-function App() {
+function Main() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -90,8 +95,6 @@ function App() {
     setIsLoggedIn(true)
   }
 
-
-
   // 加载状态骨架屏
   if (isLoading) {
     return (
@@ -120,9 +123,9 @@ function App() {
             <div className="nav-links">
               {isLoggedIn ? (
                 <>
-                  <a href="#" className="nav-link">我的智能体</a>
-                  <a href="#" className="nav-link">创建智能体</a>
-                  <a href="#" className="nav-link">个人中心</a>
+                  <Link to="/agents" className="nav-link">智能体管理</Link>
+                  <Link to="/sessions" className="nav-link">会话管理</Link>
+                  <Link to="/profile" className="nav-link">个人中心</Link>
                   <div className="user-avatar">
                     {userInfo.avatar ? (
                       <img src={userInfo.avatar} alt={userInfo.nickname} className="avatar-image" />
@@ -146,7 +149,9 @@ function App() {
                     <LogIn className="btn-icon" />
                     登录
                   </button>
-                  <button className="btn btn-primary">注册</button>
+                  <button className="btn btn-primary" onClick={() => navigate('/register')}>
+                    注册
+                  </button>
                 </>
               )}
               <button className="btn dark-mode-btn" onClick={toggleDarkMode}>
@@ -167,9 +172,9 @@ function App() {
             <div className="mobile-menu-content">
               {isLoggedIn ? (
                 <>
-                  <a href="#" className="mobile-nav-link">我的智能体</a>
-                  <a href="#" className="mobile-nav-link">创建智能体</a>
-                  <a href="#" className="mobile-nav-link">个人中心</a>
+                  <Link to="/agents" className="mobile-nav-link" onClick={() => setIsMobileMenuOpen(false)}>智能体管理</Link>
+                  <Link to="/sessions" className="mobile-nav-link" onClick={() => setIsMobileMenuOpen(false)}>会话管理</Link>
+                  <Link to="/profile" className="mobile-nav-link" onClick={() => setIsMobileMenuOpen(false)}>个人中心</Link>
                   <div className="mobile-user-avatar">
                     {userInfo.avatar ? (
                       <img src={userInfo.avatar} alt={userInfo.nickname} className="avatar-image" />
@@ -194,7 +199,9 @@ function App() {
                     <LogIn className="btn-icon" />
                     登录
                   </button>
-                  <button className="btn btn-primary w-full">注册</button>
+                  <button className="btn btn-primary w-full" onClick={() => navigate('/register')}>
+                    注册
+                  </button>
                 </>
               )}
               <button className="btn btn-icon w-full" onClick={toggleDarkMode}>
@@ -214,17 +221,17 @@ function App() {
               <p>小歪是一款基于智能体技术的人工智能助手，根据用户的自定义需求创建专属智能体，为你提供个性化的智能服务。</p>
               <div className="hero-buttons">
                 {isLoggedIn ? (
-                  <button className="btn btn-primary">
+                  <button className="btn btn-primary" onClick={() => navigate('/agents')}>
                     创建智能体
                     <ChevronRight className="btn-icon" />
                   </button>
                 ) : (
                   <>
-                    <button className="btn btn-primary">
+                    <button className="btn btn-primary" onClick={() => navigate('/register')}>
                       开始使用
                       <ChevronRight className="btn-icon" />
                     </button>
-                    <button className="btn btn-outline" onClick={handleLogin}>
+                    <button className="btn btn-outline" onClick={() => navigate('/login')}>
                       试用体验
                     </button>
                   </>
@@ -392,6 +399,19 @@ function App() {
         </div>
       </footer>
     </div>
+  )
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Main />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/agents" element={<AgentManagement />} />
+      <Route path="/sessions" element={<SessionManagement />} />
+    </Routes>
   )
 }
 

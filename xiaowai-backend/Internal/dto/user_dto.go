@@ -1,7 +1,6 @@
 package dto
 
 import (
-	"mime/multipart"
 	"time"
 )
 
@@ -21,14 +20,9 @@ type LoginRequest struct {
 type ProfileRequest struct {
 	NickName  string `json:"nickname" binding:"required,min=2,max=20"`
 	BirthDay  string `json:"birthday" binding:"omitempty,datetime=2006-01-02"`
-	Avatar    string `json:"avatar" binding:"omitempty,url"`
 	Gender    string `json:"gender" binding:"oneof=unknown male female other"`
 	Hobbies   string `json:"hobbies" binding:"max=500"`
 	Signature string `json:"signature" binding:"max=200"`
-}
-
-type AvatarRequest struct {
-	Avatar *multipart.FileHeader `form:"avatar" binding:"required"`
 }
 
 type LoginData struct {
