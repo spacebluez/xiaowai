@@ -1,0 +1,5 @@
+{"level":"WARN","ts":"2026-04-07T18:56:14.942+0800","caller":"service/user_service.go:116","msg":"用户不存在","username":"test","trace_id":"60923168-ff6c-45c5-a206-fec3cede1416"}
+{"level":"WARN","ts":"2026-04-07T18:56:14.942+0800","caller":"controller/user_controller.go:70","msg":"登录失败","username":"test","error":"用户名不存在","trace_id":"60923168-ff6c-45c5-a206-fec3cede1416"}
+{"level":"WARN","ts":"2026-04-07T18:56:22.608+0800","caller":"service/user_service.go:116","msg":"用户不存在","username":"admin","trace_id":"d722b200-e98a-4b43-828d-96fe4b5ea7d1"}
+{"level":"WARN","ts":"2026-04-07T18:56:22.608+0800","caller":"controller/user_controller.go:70","msg":"登录失败","username":"admin","error":"用户名不存在","trace_id":"d722b200-e98a-4b43-828d-96fe4b5ea7d1"}
+{"level":"WARN","ts":"2026-04-07T18:56:30.242+0800","caller":"service/user_service.go:45","msg":"验证码验证失败","email":"test@example.com","error":"验证码不存在或已过期","trace_id":"d1a000f4-d8e0-4ec7-a09b-7938073fecb7"}

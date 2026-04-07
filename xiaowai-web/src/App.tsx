@@ -8,6 +8,11 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [userInfo, setUserInfo] = useState({
+    id: 0,
+    nickname: '',
+    avatar: ''
+  })
   const navigate = useNavigate()
 
   // 模拟加载状态
@@ -18,10 +23,66 @@ function App() {
     return () => clearTimeout(timer)
   }, [])
 
+  // 检查登录状态并获取用户信息
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const token = localStorage.getItem('token')
+      if (token) {
+        setIsLoggedIn(true)
+        // 获取用户信息
+        try {
+          const response = await fetch('http://localhost:8080/api/v1/user/profile', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          })
+          if (response.ok) {
+            const data = await response.json()
+            if (data.code === 0) {
+              setUserInfo({
+                id: data.data.id,
+                nickname: data.data.nickname,
+                avatar: data.data.avatar
+              })
+            }
+          }
+        } catch (error) {
+          console.error('获取用户信息失败:', error)
+        }
+      }
+    }
+    checkLoginStatus()
+  }, [])
+
   // 切换深色模式
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
     document.documentElement.classList.toggle('dark')
+  }
+
+  // 登出功能
+  const handleLogout = async () => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      try {
+        await fetch('http://localhost:8080/api/v1/user/logout', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+      } catch (error) {
+        console.error('登出失败:', error)
+      } finally {
+        localStorage.removeItem('token')
+        setIsLoggedIn(false)
+        setUserInfo({
+          id: 0,
+          nickname: '',
+          avatar: ''
+        })
+      }
+    }
   }
 
   // 模拟登录
@@ -29,10 +90,7 @@ function App() {
     setIsLoggedIn(true)
   }
 
-  // 模拟登出
-  const handleLogout = () => {
-    setIsLoggedIn(false)
-  }
+
 
   // 加载状态骨架屏
   if (isLoading) {
@@ -65,6 +123,15 @@ function App() {
                   <a href="#" className="nav-link">我的智能体</a>
                   <a href="#" className="nav-link">创建智能体</a>
                   <a href="#" className="nav-link">个人中心</a>
+                  <div className="user-avatar">
+                    {userInfo.avatar ? (
+                      <img src={userInfo.avatar} alt={userInfo.nickname} className="avatar-image" />
+                    ) : (
+                      <div className="avatar-placeholder">
+                        {userInfo.nickname ? userInfo.nickname.charAt(0) : 'U'}
+                      </div>
+                    )}
+                  </div>
                   <button className="btn btn-outline" onClick={handleLogout}>
                     <LogOut className="btn-icon" />
                     登出
@@ -103,6 +170,16 @@ function App() {
                   <a href="#" className="mobile-nav-link">我的智能体</a>
                   <a href="#" className="mobile-nav-link">创建智能体</a>
                   <a href="#" className="mobile-nav-link">个人中心</a>
+                  <div className="mobile-user-avatar">
+                    {userInfo.avatar ? (
+                      <img src={userInfo.avatar} alt={userInfo.nickname} className="avatar-image" />
+                    ) : (
+                      <div className="avatar-placeholder">
+                        {userInfo.nickname ? userInfo.nickname.charAt(0) : 'U'}
+                      </div>
+                    )}
+                    <span className="user-nickname">{userInfo.nickname || '用户'}</span>
+                  </div>
                   <button className="btn btn-outline w-full" onClick={handleLogout}>
                     <LogOut className="btn-icon" />
                     登出

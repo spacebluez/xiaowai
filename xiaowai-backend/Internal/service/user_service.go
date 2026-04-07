@@ -189,7 +189,7 @@ func (s *UserService) UpdateAvatar(ctx context.Context, file io.Reader, id uint)
 		logger.DebugWithTrace(ctx, "不存在该用户", zap.Uint("id", id))
 		return fmt.Errorf("不存在该用户")
 	}
-	filepath := fmt.Sprintf("oss://spaceblue/users/avatar/%d+.jpg", id)
+	filepath := fmt.Sprintf("oss://spaceblue/users/avatar/%d.jpg", id)
 	if err := oss.PutObjectByPath(ctx, filepath, file); err != nil {
 		logger.ErrorWithTrace(ctx, "更新用户头像失败", zap.Uint("id", id), zap.Error(err))
 		return err
