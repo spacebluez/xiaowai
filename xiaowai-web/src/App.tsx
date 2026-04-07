@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Brain, Users, MessageSquare, Settings, LogIn, LogOut, ChevronRight, Menu, X } from 'lucide-react'
+import { Brain, Users, MessageSquare, Settings, LogIn, LogOut, ChevronRight, Menu, X, Sun, Moon } from 'lucide-react'
 import './App.css'
 
 function App() {
@@ -80,8 +80,8 @@ function App() {
                   <button className="btn btn-primary">注册</button>
                 </>
               )}
-              <button className="btn btn-icon" onClick={toggleDarkMode}>
-                {isDarkMode ? '☀️' : '🌙'}
+              <button className="btn dark-mode-btn" onClick={toggleDarkMode}>
+                {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
               </button>
             </div>
 
@@ -142,7 +142,7 @@ function App() {
                 ) : (
                   <>
                     <button className="btn btn-primary">
-                      立即注册
+                      开始使用
                       <ChevronRight className="btn-icon" />
                     </button>
                     <button className="btn btn-outline" onClick={handleLogin}>
@@ -270,10 +270,12 @@ function App() {
       <footer className="footer">
         <div className="container">
           <div className="footer-content">
-            <div className="footer-logo">
-              <Brain className="logo-icon" />
-              <span>小歪</span>
-              <p>AI 智能体助手</p>
+            <div className="footer-brand">
+              <div className="footer-logo">
+                <Brain className="logo-icon" />
+                <span>小歪</span>
+              </div>
+              <p className="footer-tagline">AI 智能体助手</p>
             </div>
             <div className="footer-links">
               <div className="footer-link-group">
@@ -302,20 +304,6 @@ function App() {
                   <li><a href="#">隐私政策</a></li>
                   <li><a href="#">服务条款</a></li>
                 </ul>
-              </div>
-              <div className="footer-link-group">
-                <h4>社交媒体</h4>
-                <div className="social-links">
-                  <a href="#" className="social-link">
-                    GitHub
-                  </a>
-                  <a href="#" className="social-link">
-                    Twitter
-                  </a>
-                  <a href="#" className="social-link">
-                    LinkedIn
-                  </a>
-                </div>
               </div>
             </div>
           </div>
