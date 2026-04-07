@@ -35,3 +35,7 @@ type UpdateAgentRequest struct {
 	ModelName string `json:"model_name" binding:"required"`
 	Persona   string `json:"persona" binding:"required"`
 }
+
+type DeleteAgentRequest struct {
+	AgentID uint `json:"agent_id" binding:"required"`
+}

@@ -177,3 +177,13 @@ func (s *AgentService) UpdateAgent(ctx context.Context, id uint, req *dto.Update
 	logger.InfoWithTrace(ctx, "智能体配置更新成功", zap.Uint("id", agent.ID))
 	return nil
 }
+
+func (s *AgentService) DeleteAgent(ctx context.Context, id uint, req *dto.DeleteAgentRequest) error {
+	logger.InfoWithTrace(ctx, "删除智能体配置", zap.Uint("id", id), zap.Any("req", req))
+	if err := s.agentRepo.DeleteAgent(ctx, s.db, req.AgentID); err != nil {
+		logger.ErrorWithTrace(ctx, "删除智能体配置失败", zap.Error(err))
+		return err
+	}
+	logger.InfoWithTrace(ctx, "智能体配置删除成功", zap.Uint("id", req.AgentID))
+	return nil
+}

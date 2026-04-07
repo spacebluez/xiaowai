@@ -61,3 +61,14 @@ func (r *AgentRepository) UpdateAgent(ctx context.Context, db *gorm.DB, agent *m
 	}
 	return nil
 }
+
+func (r *AgentRepository) DeleteAgent(ctx context.Context, db *gorm.DB, id uint) error {
+	logger.InfoWithTrace(ctx, "删除智能体配置", zap.Uint("id", id))
+	result := db.WithContext(ctx).Model(&model.Agent{}).
+		Where("id = ?", id).
+		Delete(&model.Agent{})
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
