@@ -139,3 +139,33 @@ func (ac *AgentController) DeleteAgent(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, dto.APIResponse{Code: 0, Msg: "ok", Data: nil})
 }
+
+func (ac *AgentController) GetSessionMessages(c *gin.Context) {
+	ctx := c.Request.Context()
+	sessionID := c.Param("sessionId")
+	if sessionID == "" {
+		logger.WarnWithTrace(ctx, "会话ID为空")
+		c.JSON(http.StatusBadRequest, dto.APIResponse{Code: http.StatusBadRequest, Msg: "会话ID不能为空", Data: nil})
+		return
+	}
+
+	userID, exists := c.Get("userID")
+	if !exists {
+		logger.ErrorWithTrace(ctx, "上下文中未找到用户ID")
+		c.JSON(http.StatusUnauthorized, dto.APIResponse{Code: http.StatusUnauthorized, Msg: "未授权，请重新登录", Data: nil})
+		return
+	}
+
+	messages, err := ac.agentService.GetSessionMessages(ctx, userID.(uint), sessionID)
+	if err != nil {
+		logger.ErrorWithTrace(ctx, "获取会话消息失败", zap.Uint("user_id", userID.(uint)), zap.Error(err))
+		c.JSON(http.StatusInternalServerError, dto.APIResponse{Code: http.StatusInternalServerError, Msg: "获取会话消息失败，请稍后再试", Data: nil})
+		return
+	}
+
+	c.JSON(http.StatusOK, dto.APIResponse{
+		Code: 0,
+		Msg:  "获取会话消息成功",
+		Data: dto.GetSessionMessagesResponse{Messages: messages},
+	})
+}

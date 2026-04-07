@@ -26,3 +26,14 @@ type Session struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
+
+type Message struct {
+	SessionID uint      `json:"session_id"`
+	Role      string    `json:"role"`
+	Content   string    `json:"content"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
+type GetSessionMessagesResponse struct {
+	Messages []Message `json:"messages"`
+}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strconv"
 	"time"
 	"xiaowai-backend/Internal/dto"
 	"xiaowai-backend/Internal/model"
@@ -196,4 +197,47 @@ func (s *AgentService) DeleteAgent(ctx context.Context, id uint, req *dto.Delete
 	}
 	logger.InfoWithTrace(ctx, "智能体配置删除成功", zap.Uint("id", req.AgentID))
 	return nil
+}
+
+func (s *AgentService) GetSessionMessages(ctx context.Context, userID uint, sessionIDStr string) ([]dto.Message, error) {
+	logger.InfoWithTrace(ctx, "获取会话消息", zap.Uint("user_id", userID), zap.String("session_id", sessionIDStr))
+
+	// 解析会话ID
+	sessionID, err := strconv.ParseUint(sessionIDStr, 10, 32)
+	if err != nil {
+		logger.ErrorWithTrace(ctx, "会话ID解析失败", zap.Error(err))
+		return nil, err
+	}
+
+	// 验证会话属于当前用户
+	session, err := s.sessionRepo.GetSessionByID(ctx, uint(sessionID))
+	if err != nil {
+		logger.ErrorWithTrace(ctx, "获取会话失败", zap.Error(err))
+		return nil, err
+	}
+
+	if session.UserID != userID {
+		logger.ErrorWithTrace(ctx, "会话用户与会体配置不匹配")
+		return nil, errors.New("会话用户与会体配置不匹配")
+	}
+
+	// 获取会话消息
+	messages, err := s.messageRepo.FindMessageBySessionID(ctx, uint(sessionID))
+	if err != nil {
+		logger.ErrorWithTrace(ctx, "获取消息失败", zap.Error(err))
+		return nil, err
+	}
+
+	// 转换为DTO
+	messageDTOs := make([]dto.Message, 0, len(messages))
+	for _, msg := range messages {
+		messageDTOs = append(messageDTOs, dto.Message{
+			SessionID: msg.SessionID,
+			Role:      msg.Role,
+			Content:   msg.Content,
+			CreatedAt: msg.CreatedAt,
+		})
+	}
+
+	return messageDTOs, nil
 }

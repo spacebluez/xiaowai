@@ -52,6 +52,7 @@ func InitRouter() *gin.Engine {
 			auth.PUT("/agent/update", agentCtrl.UpdateAgent)
 			auth.GET("/session/list", sessionCtrl.GetSessionListByUserID)
 			auth.POST("/session/create", sessionCtrl.CreateSession)
+			auth.GET("/session/:sessionId/messages", agentCtrl.GetSessionMessages)
 			auth.POST("/agent/delete", agentCtrl.DeleteAgent)
 		}
 	}
