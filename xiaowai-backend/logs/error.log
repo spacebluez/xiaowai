@@ -63,3 +63,4 @@
 {"level":"ERROR","ts":"2026-04-07T22:07:15.648+0800","caller":"controller/agent_controller.go:165","msg":"验证会话失败","error":"record not found","trace_id":"1718c38e-ee7d-4313-bac2-ba7fc44b5f63"}
 {"level":"ERROR","ts":"2026-04-07T22:07:52.056+0800","caller":"service/agent_service.go:157","msg":"获取智能体配置失败","error":"record not found","trace_id":"6c27e1eb-f1e7-41ce-bdbc-efbdb6c5e13c"}
 {"level":"ERROR","ts":"2026-04-07T22:07:52.056+0800","caller":"controller/agent_controller.go:165","msg":"验证会话失败","error":"record not found","trace_id":"6c27e1eb-f1e7-41ce-bdbc-efbdb6c5e13c"}
+{"level":"ERROR","ts":"2026-04-09T01:41:24.270+0800","caller":"repository/user_repository.go:65","msg":"查询用户失败","username":"test","error":"record not found","trace_id":"c6ec0a12-23bd-405d-acc3-c0b5a9b34dee"}

@@ -183,6 +183,14 @@ function AgentManagement() {
     setMessage('')
   }
 
+  // 截断文本函数，用于缩略显示智能体角色设定
+  const truncateText = (text: string, maxLength: number = 100) => {
+    if (text.length <= maxLength) {
+      return text
+    }
+    return text.substring(0, maxLength) + '...'
+  }
+
   if (isLoading) {
     return (
       <div className="agent-management-page">
@@ -352,7 +360,7 @@ function AgentManagement() {
                     </div>
                     <div className="agent-card-body">
                       <div className="agent-model">模型: {agent.ModelName}</div>
-                      <div className="agent-persona">{agent.Persona}</div>
+                      <div className="agent-persona">{truncateText(agent.Persona)}</div>
                     </div>
                   </div>
                 ))}

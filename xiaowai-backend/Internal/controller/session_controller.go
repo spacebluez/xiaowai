@@ -47,7 +47,7 @@ func (sc *SessionController) CreateSession(c *gin.Context) {
 		Msg:  "会话创建成功",
 		Data: dto.CreateSessionResponse{
 			Session: dto.Session{
-				ID:        session.ID,
+				ID:        session.SessionID,
 				UserID:    session.UserID,
 				AgentID:   session.AgentID,
 				Title:     session.Title,
@@ -56,7 +56,7 @@ func (sc *SessionController) CreateSession(c *gin.Context) {
 			},
 		},
 	})
-	logger.InfoWithTrace(ctx, "会话创建成功", zap.Uint("user_id", userID.(uint)), zap.Uint("session_id", session.ID))
+	logger.InfoWithTrace(ctx, "会话创建成功", zap.Uint("user_id", userID.(uint)), zap.Uint("session_id", session.SessionID))
 }
 
 func (sc *SessionController) GetSessionListByUserID(c *gin.Context) {

@@ -39,7 +39,7 @@ func (s *SessionService) GetSessionListByUserID(ctx context.Context, userID uint
 	sessionListDTO := make([]dto.Session, 0, len(*sessionList))
 	for _, session := range *sessionList {
 		sessionListDTO = append(sessionListDTO, dto.Session{
-			ID:        session.ID,
+			ID:        session.SessionID,
 			UserID:    session.UserID,
 			AgentID:   session.AgentID,
 			Title:     session.Title,

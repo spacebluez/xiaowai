@@ -24,10 +24,3 @@ func (m *Message) ToQianWenMessage() qianwen.Message {
 	}
 }
 
-func ToQianWenMessages(messages []Message) []qianwen.Message {
-	result := make([]qianwen.Message, len(messages))
-	for i, msg := range messages {
-		result[i] = msg.ToQianWenMessage()
-	}
-	return result
-}

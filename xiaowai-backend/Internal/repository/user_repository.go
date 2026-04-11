@@ -176,3 +176,5 @@ func (r *UserRepository) GetAvatarPathByUserID(ctx context.Context, id uint) (st
 	}
 	return profile.Avatar, nil
 }
+
+
